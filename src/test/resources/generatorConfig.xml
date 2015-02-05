@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<classPathEntry
+		location="D:\data\maven-repos\mysql\mysql-connector-java\5.1.17\mysql-connector-java-5.1.17.jar" />
+	<context id="context1">
+		<property name="javaFileEncoding" value="utf-8" />
+		<!-- pagination plugin -->
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+		<plugin type="org.mybatis.generator.plugin.PaginationMysqlPlugin" />
+		<plugin type="org.mybatis.generator.plugin.OrderByPlugin" />
+		<plugin type="org.mybatis.generator.plugin.CommentPlugin">
+			<property name="modelClassAuthor" value="reed" />
+		</plugin>
+		<commentGenerator>
+			<!-- 不生成注解信息 -->
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull"
+			userId="root" password="1234" />
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<javaModelGenerator targetPackage="com.test.domain"
+			targetProject="web-scaffolds" />
+		<sqlMapGenerator targetPackage="com.test.mapper"
+			targetProject="web-scaffolds" />
+		<javaClientGenerator targetPackage="com.test.mapper"
+			targetProject="web-scaffolds" type="XMLMAPPER" />
+		<table schema="" tableName="" domainObjectName="" />
+
+	</context>
+</generatorConfiguration>

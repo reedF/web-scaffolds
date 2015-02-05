@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:c="http://www.springframework.org/schema/c" xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+
+	<context:component-scan base-package="com.reed.fileupload.fastdfs" />
+	<!-- fastdfs file upload -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize">
+			<value>${upload.maxUploadSize?22020096}</value>
+		</property>
+		<property name="maxInMemorySize">
+			<value>${upload.maxInMemorySize?2048}</value>
+		</property>
+		<property name="defaultEncoding">
+			<value>${upload.defaultEncoding?UTF-8}</value>
+		</property>
+	</bean>
+	<bean class="org.csource.fastdfs.ClientGlobal">
+		<property name="g_connect_timeout" value="${fastdfs.connect_timeout?2000}" />
+		<property name="g_network_timeout" value="${fastdfs.network_timeout?30000}" />
+		<property name="g_charset" value="${fastdfs.charset?UTF-8}" />
+		<property name="g_tracker_http_port" value="${fastdfs.tracker_http_port?8080}" />
+		<property name="g_anti_steal_token" value="${fastdfs.anti_steal_token?false}" />
+		<property name="g_secret_key" value="${fastdfs.secret_key}" />
+	</bean>
+	<!-- group1 -->
+	<bean id="trackerGroup" class="org.csource.fastdfs.TrackerGroup">
+		<constructor-arg>
+			<set>
+				<bean class="java.net.InetSocketAddress">
+					<constructor-arg value="${fastdfs.tracker_server1.host}" />
+					<constructor-arg value="${fastdfs.tracker_server1.port}" />
+				</bean>
+				<bean class="java.net.InetSocketAddress">
+					<constructor-arg value="${fastdfs.tracker_server2.host}" />
+					<constructor-arg value="${fastdfs.tracker_server2.port}" />
+				</bean>
+			</set>
+		</constructor-arg>
+	</bean>
+</beans>
