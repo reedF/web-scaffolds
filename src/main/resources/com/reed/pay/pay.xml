@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<context:component-scan base-package="com.reed.pay" />
+	<!--====================== Configuration ====================== -->
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>pay.properties</value>
+			</list>
+		</property>
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="order" value="1" />
+		<property name="valueSeparator" value="?" />
+	</bean>
+	<!-- redis -->
+	<bean id="pay_jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="${redis.pool.maxActive?20}" />
+		<property name="maxIdle" value="${redis.pool.maxIdle?10}" />
+		<property name="maxWaitMillis" value="${redis.pool.maxWait?2000}" />
+		<property name="testOnBorrow" value="${redis.pool.testOnBorrow?true}" />
+		<property name="testOnReturn" value="${redis.pool.testOnReturn?false}" />
+	</bean>
+	<bean id="pay_jedisConnectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="hostName" value="${redis.ip}" />
+		<property name="database" value="${redis.db?0}" />
+		<property name="port" value="${redis.port?6379}" />
+		<property name="timeout" value="${redis.timeout?10000}" />
+		<property name="usePool" value="true" />
+		<property name="poolConfig" ref="pay_jedisPoolConfig" />
+	</bean>
+
+	<!-- redis template definition -->
+	<bean id="pay_redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+		p:connection-factory-ref="pay_jedisConnectionFactory">
+		<property name="keySerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+		</property>
+		<property name="hashKeySerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+		</property>
+	</bean>
+
+	<!-- declare Redis Cache Manager -->
+	<bean id="pay_rediscacheManager" class="org.springframework.data.redis.cache.RedisCacheManager"
+		c:template-ref="pay_redisTemplate" p:defaultExpiration="${redis.defaultExpiration?1800}" />
+
+	<!-- dummy cacheManager to control if can not find cache how to do -->
+	<bean id="pay_cacheManager" class="org.springframework.cache.support.CompositeCacheManager">
+		<property name="cacheManagers">
+			<list>
+				<ref bean="pay_rediscacheManager" />
+			</list>
+		</property>
+		<property name="fallbackToNoOpCache" value="true" />
+	</bean>
+</beans>
