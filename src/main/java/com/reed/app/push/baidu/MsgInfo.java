@@ -57,7 +57,7 @@ public class MsgInfo {
 		this.aps = new HashMap<String, String>();
 		this.aps.put("alert", title);
 		this.aps.put("sound", "");
-		//ios 未读消息数
+		// ios 未读消息数，即App应用图标右上角那个数字
 		this.aps.put("badge", "1");
 	}
 
