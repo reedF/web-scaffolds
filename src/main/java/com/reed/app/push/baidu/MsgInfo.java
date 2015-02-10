@@ -57,7 +57,8 @@ public class MsgInfo {
 		this.aps = new HashMap<String, String>();
 		this.aps.put("alert", title);
 		this.aps.put("sound", "");
-		this.aps.put("badge", "0");
+		//ios 未读消息数
+		this.aps.put("badge", "1");
 	}
 
 	public String getTitle() {
