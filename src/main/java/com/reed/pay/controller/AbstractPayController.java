@@ -12,9 +12,7 @@ public abstract class AbstractPayController {
 	 * 
 	 * @param orderNo
 	 */
-	public boolean payDoneBusiness(String orderNo) {
-		return false;
-	}
+	public abstract boolean payDoneBusiness(String orderNo);
 
 	/**
 	 * 退款成功后，后续业务逻辑：更新订单状态等
@@ -22,7 +20,6 @@ public abstract class AbstractPayController {
 	 * @param batchNo
 	 * @param detailDatas
 	 */
-	public boolean refundDoneBusiness(String batchNo, String[] detailDatas) {
-		return false;
-	}
+	public abstract boolean refundDoneBusiness(String batchNo,
+			String[] detailDatas);
 }

@@ -151,6 +151,43 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>4.3.1.Final</version>
 		</dependency>
+		<!--entity -->
+		<dependency>
+			<groupId>com.bill99.schema</groupId>
+			<artifactId>fo-jibx-commons</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bill99.schema</groupId>
+			<artifactId>fo-jibx-settlement</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bill99.schema</groupId>
+			<artifactId>if-jibx-schema-asap</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bill99.schema</groupId>
+			<artifactId>if-jibx-schema-commons</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<!-- 99bill -->
+		<dependency>
+			<groupId>org.jibx</groupId>
+			<artifactId>jibx-run</artifactId>
+			<version>1.2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bill99.seashell</groupId>
+			<artifactId>if-util</artifactId>
+			<version>3.2.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.bill99.asap</groupId>
+			<artifactId>if-crypto-sdk</artifactId>
+			<version>3.3.2</version>
+		</dependency>
 	</dependencies>
 
 

@@ -27,7 +27,6 @@ import com.reed.pay.alipay.RSA;
 /**
  * 支付宝服务器异步通知
  * 
- * @author zhangzhiyong
  * 
  */
 @RestController

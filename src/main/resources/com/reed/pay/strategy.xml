@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strategies xmlns="http://www.99bill.com/schema/asap/strategy"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:commons="http://www.99bill.com/schema/asap/commons"
+	xsi:schemaLocation="http://www.99bill.com/schema/asap/strategy http://www.99bill.com/schema/asap/strategy.xsd
+http://www.99bill.com/schema/asap/commons http://www.99bill.com/schema/asap/commons.xsd">
+
+	<!-- com.bill99.schema相关jar直接读取本文件，路径在classpath根目录，名字不可改 -->
+	<strategy>
+		<mpf>
+			<commons:member-code>${99bill.member-code}</commons:member-code>
+			<commons:feature-code>F889</commons:feature-code>
+		</mpf>
+		<crypto-strategy>
+			<type>signatureAndCrypto</type>
+			<available>true</available>
+			<algorithm-set>
+				<signature-alg>SHA1withRSA</signature-alg>
+				<symmetric-alg>AES/CBC/PKCS5Padding</symmetric-alg>
+				<asymmetric-alg>RSA/ECB/PKCS1Padding</asymmetric-alg>
+			</algorithm-set>
+		</crypto-strategy>
+		<key-strategy>
+			<bill99-public-key-file-path>*.cer</bill99-public-key-file-path>
+			<mpf-keystore>
+				<path>*.pfx</path>
+				<key-store-type>PKCS12</key-store-type>
+				<key-store-password>${99bill.store-password}</key-store-password>
+				<alias>${99bill.alias}</alias>
+				<key-password>${99bill.key-password}</key-password>
+			</mpf-keystore>
+		</key-strategy>
+	</strategy>
+
+</strategies>
