@@ -52,7 +52,8 @@ import com.reed.pay.bill99.entry.OrderInfoEntity;
 //import org.apache.commons.codec.binary.Base64;
 
 /**
- * Created by zhangxubo on 15-1-7 快钱支付 封装请求结果/返回 对象对应CustomerUtil
+ * 
+ * 快钱支付 封装请求结果/返回 对象对应CustomerUtil
  */
 public class PayResultReversalUtil {
 
