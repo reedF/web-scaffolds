@@ -31,11 +31,11 @@ public class MsgInfo {
 	/** 消息弹窗点击后显示的内容 */
 	private String description;
 	/** android */
-	private int notification_builder_id = 0;
-	private int notification_basic_style = 7;
-	private int open_type = 2;
-	private int user_confirm = 0;
-	private String url = "http://developer.baidu.com";
+	// private int notification_builder_id = 0;
+	// private int notification_basic_style = 7;
+	// private int open_type = 2;
+	// private int user_confirm = 0;
+	// private String url = "http://developer.baidu.com";
 	// private String pkg_content = "";
 	// private int net_support = 1;
 	// private String pkg_name = "com.baidu.bccsclient";
@@ -77,45 +77,45 @@ public class MsgInfo {
 		this.description = description;
 	}
 
-	public int getNotification_builder_id() {
-		return notification_builder_id;
-	}
-
-	public void setNotification_builder_id(int notification_builder_id) {
-		this.notification_builder_id = notification_builder_id;
-	}
-
-	public int getNotification_basic_style() {
-		return notification_basic_style;
-	}
-
-	public void setNotification_basic_style(int notification_basic_style) {
-		this.notification_basic_style = notification_basic_style;
-	}
-
-	public int getOpen_type() {
-		return open_type;
-	}
-
-	public void setOpen_type(int open_type) {
-		this.open_type = open_type;
-	}
-
-	public int getUser_confirm() {
-		return user_confirm;
-	}
-
-	public void setUser_confirm(int user_confirm) {
-		this.user_confirm = user_confirm;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
+	// public int getNotification_builder_id() {
+	// return notification_builder_id;
+	// }
+	//
+	// public void setNotification_builder_id(int notification_builder_id) {
+	// this.notification_builder_id = notification_builder_id;
+	// }
+	//
+	// public int getNotification_basic_style() {
+	// return notification_basic_style;
+	// }
+	//
+	// public void setNotification_basic_style(int notification_basic_style) {
+	// this.notification_basic_style = notification_basic_style;
+	// }
+	//
+	// public int getOpen_type() {
+	// return open_type;
+	// }
+	//
+	// public void setOpen_type(int open_type) {
+	// this.open_type = open_type;
+	// }
+	//
+	// public int getUser_confirm() {
+	// return user_confirm;
+	// }
+	//
+	// public void setUser_confirm(int user_confirm) {
+	// this.user_confirm = user_confirm;
+	// }
+	//
+	// public String getUrl() {
+	// return url;
+	// }
+	//
+	// public void setUrl(String url) {
+	// this.url = url;
+	// }
 
 	// public int getNet_support() {
 	// return net_support;
