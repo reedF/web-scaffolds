@@ -49,10 +49,14 @@ public class MsgInfo {
 
 	}
 
-	public MsgInfo(String title, String description) {
+	public MsgInfo(String title, String description, boolean isIos) {
 		super();
 		// this.title = title;
-		this.description = title;
+		// ios not set description or the msg's length will be long and aps will
+		// be cut
+		if (!isIos) {
+			this.description = title;
+		}
 		this.custom_content.put("data", description);
 		this.aps = new HashMap<String, String>();
 		this.aps.put("alert", title);

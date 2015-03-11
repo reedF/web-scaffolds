@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -36,6 +37,56 @@ public class BaiduPushTools {
 
 	/** push msg url */
 	public static final String push_msg = "http://channel.api.duapp.com/rest/2.0/channel/channel";
+
+	/**
+	 * 查询设备、应用、用户与百度Channel的绑定关系
+	 * 
+	 * @param userId
+	 *            baidu userId
+	 * @param key
+	 *            要查询的字段，参照http://developer.baidu.com/wiki/index.php?title=docs/
+	 *            cplat/push/api/list#query_bindlist
+	 * @param apiKey
+	 * @param secretKey
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static String queryBind(Long userId, String key, String apiKey,
+			String secretKey) {
+		String result = null;
+		BaiduPushResponse<Map<String, Object>> r = null;
+		BaiduBaseForm f = new BaiduBaseForm();
+		f.setApikey(apiKey);
+		f.setUser_id(userId);
+		if (f != null) {
+			f.setMethod("query_bindlist");
+			String sign = getSign(push_msg, secretKey, obj2Map(f));
+			f.setSign(sign);
+			String res = HttpClientTool.doPost(push_msg, obj2Map(f));
+			if (StringUtils.isNotBlank(res)) {
+				r = (BaiduPushResponse<Map<String, Object>>) JsonUtil
+						.json2Object(res, BaiduPushResponse.class);
+				if (r != null) {
+					Map<String, Object> m = (Map<String, Object>) r
+							.getResponse_params();
+					if (m != null && m.get("binds") != null) {
+						List<Map<String, Object>> binds = (List<Map<String, Object>>) m
+								.get("binds");
+						if (binds != null && binds.size() > 0) {
+							for (Map<String, Object> b : binds) {
+								if (b != null
+										&& ((Integer) b.get("bind_status") == 0)) {
+									result = String.valueOf(b.get(key));
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * 推送消息,自定义具体推送参数. 注： (1)推送类型push_type=3所有人时，会按device_type推送到对应设备，其他设备不会收到广播
@@ -135,7 +186,11 @@ public class BaiduPushTools {
 		f.setApikey(apiKey);
 		f.setPush_type((short) 1);
 		f.setMessage_type((short) 1);
-		f.setDevice_type((short) 4);
+		//f.setDevice_type((short) 4);
+		String deviceType = queryBind(userId, "device_type", apiKey, secretKey);
+		if (StringUtils.isNotBlank(deviceType)) {
+			f.setDevice_type(Short.valueOf(deviceType));
+		}
 		f.setMsg(title, msg);
 		f.setMsg_keys("" + new Date().getTime());
 		f.setTag(null);
@@ -240,5 +295,6 @@ public class BaiduPushTools {
 		// secKey);
 		t.pushMsgToTarget(603789426887031103l, 4050060892618280481l, "test", ""
 				+ new Date().getTime(), true, apiKey, secKey);
+		t.queryBind(603789426887031103l, "device_type", apiKey, secKey);
 	}
 }

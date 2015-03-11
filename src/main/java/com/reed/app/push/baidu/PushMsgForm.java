@@ -6,8 +6,8 @@ import com.reed.common.util.JsonUtil;
  * push message form doc:{@link http
  * ://developer.baidu.com/wiki/index.php?title=docs
  * /cplat/push/faq#.E4.B8.BA.E4.BD.95.E9.80.9A.E8.BF.87Server_SDK.E6
- * .8E.A8.E9.80.81.E6.88.90.E5.8A.9F.EF.BC.8CAndroid.E7.AB.AF.E5.8D.B4.E6.94.B6.E4.B8.8D.E5.88.B0.E9.80.9A.E7.9F.A5.EF.BC.9F
- * * }
+ * .8E.A8.E9.80.81.E6.88.90.E5.8A.9F.EF.BC.8CAndroid.E7.AB.AF.E5.8D.B4.E6.94.B6.E4.B8.8D.E5.88.B0.E9.80.9A.E7.9F.A5.EF.BC.
+ * 9 F * }
  * 
  * @author reed
  * 
@@ -104,7 +104,9 @@ public class PushMsgForm extends BaiduBaseForm {
 		if (this.message_type == 0) {
 			this.messages = msg;
 		} else {
-			MsgInfo m = new MsgInfo(title, msg);
+			boolean isIos = (super.getDevice_type() != null && super
+					.getDevice_type() == (short) 4) ? true : false;
+			MsgInfo m = new MsgInfo(title, msg, isIos);
 			this.messages = JsonUtil.toJson(m);
 		}
 	}
