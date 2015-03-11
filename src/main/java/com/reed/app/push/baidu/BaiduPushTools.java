@@ -295,6 +295,6 @@ public class BaiduPushTools {
 		// secKey);
 		t.pushMsgToTarget(603789426887031103l, 4050060892618280481l, "test", ""
 				+ new Date().getTime(), true, apiKey, secKey);
-		t.queryBind(603789426887031103l, "device_type", apiKey, secKey);
+		BaiduPushTools.queryBind(603789426887031103l, "device_type", apiKey, secKey);
 	}
 }
