@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -128,11 +127,15 @@ public class BaiduPushTools {
 		if (isTest) {
 			f.setDeploy_status((short) 1);
 		}
-		// ios
-		f.setDevice_type((short) 4);
-		BaiduPushTools.pushMsg(f, secretKey);
 		// android
 		f.setDevice_type((short) 3);
+		BaiduPushTools.pushMsg(f, secretKey);
+		// ios
+		f.setDevice_type((short) 4);
+		MsgInfo msg = (MsgInfo) JsonUtil.json2Object(f.getMessages(),
+				MsgInfo.class);
+		msg.setDescription(null);
+		f.setMessages(JsonUtil.toJson(msg));
 		BaiduPushTools.pushMsg(f, secretKey);
 	}
 
@@ -186,7 +189,7 @@ public class BaiduPushTools {
 		f.setApikey(apiKey);
 		f.setPush_type((short) 1);
 		f.setMessage_type((short) 1);
-		//f.setDevice_type((short) 4);
+		// f.setDevice_type((short) 4);
 		String deviceType = queryBind(userId, "device_type", apiKey, secretKey);
 		if (StringUtils.isNotBlank(deviceType)) {
 			f.setDevice_type(Short.valueOf(deviceType));
@@ -295,6 +298,7 @@ public class BaiduPushTools {
 		// secKey);
 		t.pushMsgToTarget(603789426887031103l, 4050060892618280481l, "test", ""
 				+ new Date().getTime(), true, apiKey, secKey);
-		BaiduPushTools.queryBind(603789426887031103l, "device_type", apiKey, secKey);
+		BaiduPushTools.queryBind(603789426887031103l, "device_type", apiKey,
+				secKey);
 	}
 }
