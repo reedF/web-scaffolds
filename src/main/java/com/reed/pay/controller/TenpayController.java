@@ -27,6 +27,8 @@ import com.reed.pay.tenpay.AccessTokenUtil;
 import com.reed.pay.tenpay.RequestHandler;
 import com.reed.pay.tenpay.ResponseHandler;
 import com.reed.pay.tenpay.TenpayConfig;
+import com.reed.pay.tenpay.client.ClientResponseHandler;
+import com.reed.pay.tenpay.client.TenpayHttpClient;
 import com.reed.pay.tenpay.util.Sha1Util;
 
 /**
@@ -225,5 +227,94 @@ public abstract class TenpayController extends AbstractPayController {
 			tenpayPayVo.setRetMsg("错误：获取不到Token");
 		}
 		return tenpayPayVo;
+	}
+
+	/**
+	 * 查询微信的退款处理状态
+	 * 
+	 * @param transactionId
+	 *            微信交易流水号
+	 * @return
+	 * @throws Exception
+	 */
+	public String normalRefundQuery(String transactionId) throws Exception {
+		String out_refund_no = null;
+		RequestHandler reqHandler = new RequestHandler(null, null);
+		TenpayHttpClient httpClient = new TenpayHttpClient();
+		ClientResponseHandler resHandler = new ClientResponseHandler();
+		// 设置请求参数
+		reqHandler.init();
+		reqHandler.setCharset(TenpayConfig.input_charset);
+		reqHandler.setKey(TenpayConfig.partner_key);
+		reqHandler
+				.setGateUrl("https://gw.tenpay.com/gateway/normalrefundquery.xml");
+		// 设置接口参数
+		// -----------------------------
+		reqHandler.setParameter("partner", TenpayConfig.partner);
+		// reqHandler.setParameter("out_trade_no", "XXX");
+		reqHandler.setParameter("transaction_id", transactionId);
+		// reqHandler.setParameter("out_refund_no", "XXX");
+		// reqHandler.setParameter("refund_id", "XXX");
+		// 设置请求返回的等待时间
+		// httpClient.setTimeOut(5);
+		// 设置发送类型POST
+		httpClient.setMethod("POST");
+		// 设置请求内容
+		String requestUrl = reqHandler.getRequestURL();
+		httpClient.setReqContent(requestUrl);
+		String rescontent = "null";
+		// 后台调用
+		if (httpClient.call()) {
+			// 设置结果参数
+			rescontent = httpClient.getResContent();
+			resHandler.setContent(rescontent);
+			resHandler.setKey(TenpayConfig.partner_key);
+			// 获取返回参数
+			String retcode = resHandler.getParameter("retcode");
+			// 判断签名及结果
+			// 只有签名正确并且retcode为0才是请求成功
+			if (resHandler.isTenpaySign() && "0".equals(retcode)) {
+				// 取结果参数做业务处理
+				// 退款笔数
+				String refund_count = resHandler.getParameter("refund_count");
+
+				int count = Integer.parseInt(refund_count);
+				// 每笔退款详情
+				/*
+				 * 退款状态 refund_status 4，10：退款成功。 3，5，6：退款失败。 8，9，11:退款处理中。 1，2:
+				 * 未确定，需要商户原退款单号重新发起。
+				 * 7：转入代发，退款到银行发现用户的卡作废或者冻结了，导致原路退款银行卡失败，资金回流到商户的现金帐号
+				 * ，需要商户人工干预，通过线下或者财付通转账的方式进行退款。
+				 */
+				for (int i = 0; i < count; i++) {
+					String refund_state_n = "refund_state_"
+							+ Integer.toString(i);
+					String out_refund_no_n = "out_refund_no_"
+							+ Integer.toString(i);
+					String refund_fee_n = "refund_fee_" + Integer.toString(i);
+					String refund_status = resHandler
+							.getParameter(refund_state_n);
+					if ("4".equals(refund_status) || "10".equals(refund_status)) {
+						out_refund_no = resHandler
+								.getParameter(out_refund_no_n);
+					}
+				}
+			} else {
+				// 错误时，返回结果未签名，记录retcode、retmsg看失败详情。
+				LOGGER.info("验证签名失败或业务错误");
+				LOGGER.info("retcode:" + resHandler.getParameter("retcode")
+						+ " retmsg:" + resHandler.getParameter("retmsg"));
+			}
+		} else {
+			LOGGER.error("后台调用通信失败");
+			// 有可能因为网络原因，请求已经处理，但未收到应答。
+		}
+
+		// 获取debug信息,建议把请求、应答内容、debug信息，通信返回码写入日志，方便定位问题
+		LOGGER.info("http res:" + httpClient.getResponseCode() + ","
+				+ httpClient.getErrInfo());
+		LOGGER.info("req url:" + requestUrl);
+		LOGGER.info("res content:" + rescontent);
+		return out_refund_no;
 	}
 }
