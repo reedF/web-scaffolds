@@ -230,6 +230,51 @@ public abstract class TenpayController extends AbstractPayController {
 	}
 
 	/**
+	 * 微信：主动查询订单状态
+	 * 
+	 * @param orderNo
+	 * @param request
+	 * @param response
+	 * @return 是否支付成功
+	 * @throws Exception
+	 */
+	public boolean orderQueryOfTenpay(String orderNo,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		RequestHandler reqHandler = new RequestHandler(request, response);
+		reqHandler.setGateUrl(TenpayConfig.order_query_url);
+		// 获取token值
+		String token = accessTokenUtil.getAccessToken();
+		if (StringUtils.trimToNull(token) != null) {
+			// 设置package订单参数
+			SortedMap<String, String> packageParams = new TreeMap<String, String>();
+			packageParams.put("out_trade_no", orderNo); // 商家订单号
+			packageParams.put("partner", TenpayConfig.partner); // 商户号
+			// 获取package包
+			String packageValue = reqHandler.genPackage(packageParams);
+			String timestamp = Sha1Util.getTimeStamp();
+			// 设置支付参数
+			SortedMap<String, String> signParams = new TreeMap<String, String>();
+			signParams.put("appid", TenpayConfig.app_id);
+			signParams.put("appkey", TenpayConfig.app_key);
+			signParams.put("package", packageValue);
+			signParams.put("timestamp", timestamp);
+
+			// 生成支付签名，要采用URLENCODER的原始值进行SHA1算法！
+			String sign = Sha1Util.createSHA1Sign(signParams);
+			// 增加非参与签名的额外参数
+			signParams.put("app_signature", sign);
+			signParams.put("sign_method", TenpayConfig.sign_method);
+			// 解析响应，判断错误码
+			String code = reqHandler.orderQuery(signParams, token);
+			if ("0".equals(code)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * 查询微信的退款处理状态
 	 * 
 	 * @param transactionId
